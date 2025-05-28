@@ -23,7 +23,7 @@
     }
 
     .timer-settings {
-      margin: 30px 0 20px;
+      margin: 30px 0 10px;
     }
 
     .timer-settings input {
@@ -36,6 +36,12 @@
       padding: 8px 16px;
       margin-left: 10px;
       cursor: pointer;
+    }
+
+    #countdown {
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: #333;
     }
 
     .track {
@@ -51,6 +57,16 @@
       justify-content: space-between;
       padding: 0 20px;
       font-size: 30px;
+      box-sizing: border-box;
+    }
+
+    .progress-bar {
+      position: absolute;
+      height: 100%;
+      width: 0%;
+      background-color: #4caf50;
+      z-index: 0;
+      transition: none;
     }
 
     .runner {
@@ -60,6 +76,29 @@
       transform: translateY(-50%) scaleX(-1);
       font-size: 30px;
       transition: none;
+      z-index: 1;
+    }
+
+    .track span {
+      position: relative;
+      z-index: 2;
+    }
+
+    .label {
+      position: absolute;
+      top: -35px;
+      font-size: 14px;
+      background: #fff;
+      padding: 5px 10px;
+      border-radius: 10px;
+      box-shadow: 0 0 3px rgba(0,0,0,0.2);
+      display: none;
+      z-index: 3;
+      white-space: nowrap;
+    }
+
+    .label.show {
+      display: block;
     }
   </style>
 </head>
@@ -75,31 +114,8 @@
     <button onclick="startRun()">Iniciar</button>
   </div>
 
-  <div class="track">
-    <span>🪑</span>
-    <span>🚗</span>
-    <div class="runner" id="runner">🏃</div>
-  </div>
+  <div id="countdown">00
 
-  <script>
-    function startRun() {
-      const runner = document.getElementById('runner');
-      const hours = parseInt(document.getElementById('hours').value) || 0;
-      const minutes = parseInt(document.getElementById('minutes').value) || 0;
-
-      const totalMs = (hours * 60 + minutes) * 60 * 1000;
-
-      runner.style.transition = 'none';
-      runner.style.left = '50px';
-
-      setTimeout(() => {
-        const track = document.querySelector('.track');
-        const trackWidth = track.offsetWidth;
-        const finalPosition = trackWidth - 90;
-        runner.style.transition = `left ${totalMs}ms linear`;
-        runner.style.left = `${finalPosition}px`;
-      }, 50);
-    }
   </script>
 
 </body>
