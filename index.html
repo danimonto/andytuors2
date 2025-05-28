@@ -114,8 +114,90 @@
     <button onclick="startRun()">Iniciar</button>
   </div>
 
-  <div id="countdown">00
+  <div id="countdown">00:01:00</div>
 
+  <div class="track" id="track">
+    <div class="progress-bar" id="progress"></div>
+    <span>🪑</span>
+    <span>🚗</span>
+    <div class="runner" id="runner">🏃</div>
+    <div class="label" id="saludoLabel">🗨️ Vaya saludando</div>
+    <div class="label" id="rajemosLabel">🗨️ Rajemos</div>
+  </div>
+
+  <script>
+    let countdownInterval;
+
+    function startRun() {
+      const runner = document.getElementById('runner');
+      const progress = document.getElementById('progress');
+      const countdownDisplay = document.getElementById('countdown');
+      const saludoLabel = document.getElementById('saludoLabel');
+      const rajemosLabel = document.getElementById('rajemosLabel');
+      const track = document.getElementById('track');
+
+      const hours = parseInt(document.getElementById('hours').value) || 0;
+      const minutes = parseInt(document.getElementById('minutes').value) || 0;
+
+      let totalSeconds = (hours * 60 + minutes) * 60;
+
+      if (totalSeconds === 0) {
+        countdownDisplay.textContent = "00:00:00";
+        return;
+      }
+
+      const totalMs = totalSeconds * 1000;
+
+      // Reset estilos
+      runner.style.transition = 'none';
+      runner.style.left = '50px';
+      progress.style.transition = 'none';
+      progress.style.width = '0%';
+      saludoLabel.classList.remove('show');
+      rajemosLabel.classList.remove('show');
+      clearInterval(countdownInterval);
+
+      // Posiciones de los carteles
+      const trackWidth = track.offsetWidth;
+      const saludoPos = trackWidth - 90 - (trackWidth * 5 * 60 / totalSeconds); // posición para "Vaya saludando"
+      const rajemosPos = trackWidth - 90; // final
+
+      saludoLabel.style.left = `${saludoPos}px`;
+      rajemosLabel.style.left = `${rajemosPos}px`;
+
+      // Cuenta regresiva
+      function updateCountdown() {
+        let hrs = Math.floor(totalSeconds / 3600);
+        let mins = Math.floor((totalSeconds % 3600) / 60);
+        let secs = totalSeconds % 60;
+        countdownDisplay.textContent = 
+          `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+        // Mostrar mensaje a los 5 minutos
+        if (totalSeconds === 5 * 60) {
+          saludoLabel.classList.add('show');
+        }
+
+        if (totalSeconds <= 0) {
+          clearInterval(countdownInterval);
+          rajemosLabel.classList.add('show');
+        }
+
+        totalSeconds--;
+      }
+
+      updateCountdown(); // inicial
+      countdownInterval = setInterval(updateCountdown, 1000);
+
+      // Animaciones
+      setTimeout(() => {
+        runner.style.transition = `left ${totalMs}ms linear`;
+        runner.style.left = `${rajemosPos}px`;
+
+        progress.style.transition = `width ${totalMs}ms linear`;
+        progress.style.width = `100%`;
+      }, 50);
+    }
   </script>
 
 </body>
